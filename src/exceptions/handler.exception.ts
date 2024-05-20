@@ -45,6 +45,7 @@ export function HandlerException(err: Error, _req: Request, res: Response, next:
     Sentry.captureException(err);
   }
 
+  console.log(err);
   res.status(httpCode).json({
     transactionId: '0f06b466-99dd-4f59-a5df-1ad9f2a84d0a',
     code: '',

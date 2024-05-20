@@ -4,10 +4,10 @@ import { InversifyExpressServer } from 'inversify-express-utils';
 import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 import cors from 'cors';
-import { container } from './infrastructure/utils/inversify.util';
-import { dataSource } from './infrastructure/utils/database.util';
-import { HandlerException } from './domain/exceptions/handler.exception';
-import { ResposeSuccessMiddleware } from './presentation/middlewares/response-success.middleware';
+import { container } from './utils/inversify.util';
+import { dataSource } from './utils/database.util';
+import { HandlerException } from './exceptions/handler.exception';
+import { ResposeSuccessMiddleware } from './middlewares/response-success.middleware';
 
 async function Bootstrap() {
   const server = new InversifyExpressServer(container);

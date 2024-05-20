@@ -2,7 +2,7 @@
   "name": "clean-code",
   "version": "1.0.0",
   "description": "pattern clean code",
-  "main": "./dist/main.js",
+  "main": "./src/main.ts",
   "scripts": {
     "clean": "rm -rf dist && rm -rf node_modules/.tscache",
     "lint": "eslint . --ext .ts --quiet",
@@ -10,7 +10,7 @@
     "prebuild": "npm run lint",
     "build": "npx tsc",
     "prestart": "npm run build",
-    "start": "node dist/main.js",
+    "start": "node src/main.ts",
     "prestart:dev": "npm run lint",
     "start:dev": "nodemon",
     "test": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json --watch --detectOpenHandles"

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpStatus } from '../../domain/constants/http-status.contant';
+import { HttpStatus } from '../constants/http-status.contant';
 
 export function ResposeSuccessMiddleware(_req: Request, res: Response, next: NextFunction) {
   const originalResponse = res.send.bind(res);
