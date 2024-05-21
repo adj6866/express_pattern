@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: skyward-master-ingress-stg
+  namespace: staging
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  ingressClassName: skyward-nginx-staging
+  tls:
+  - hosts:
+    - service-master-stg-skyward.sera.astra.co.id
+    secretName: skyward-tls-secret-staging
+  rules:
+  - host: service-master-stg-skyward.sera.astra.co.id
+    http:
+      paths:
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: skyward-master-stg-svc
+            port:
+              number: 80
