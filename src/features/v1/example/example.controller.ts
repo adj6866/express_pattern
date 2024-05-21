@@ -5,10 +5,10 @@ import {
   httpGet
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
-import { BaseValidation } from '../../../validations/base.validation';
+import { BaseValidation } from '@/validations/base.validation';
 import { ExampleValidation } from './create/example-create.validation';
 import { ExampleCreateService } from './create/example-create.service';
-import { ExampleByIdService } from './getById/example-by-id.service';
+import { ExampleByIdService } from './get-by-id/example-by-id.service';
 
 @controller('/')
 export class ExampleController extends BaseHttpController {

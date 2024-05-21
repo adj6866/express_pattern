@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
-import { NilaiICar } from '../../../../entities/nilai-icar.entity';
+import { NilaiICar } from '@/entities/nilai-icar.entity';
 import { injectable, inject } from 'inversify';
-import { TYPES } from '../../../../constants/types.constant';
+import { TYPES } from '@/constants/types.constant';
 
 @injectable()
 export class ExampleCreateService {

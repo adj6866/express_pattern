@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CustomErrorException } from './custom-error.exception';
 import * as Sentry from '@sentry/node';
 import { UnprocessableEntityException } from './unprocessable-entity.exception';
-import { HttpStatus } from '../constants/http-status.contant';
+import { HttpStatus } from '@/constants/http-status.contant';
 
 export function HandlerException(err: Error, _req: Request, res: Response, next: NextFunction) {
   let httpCode = 0;

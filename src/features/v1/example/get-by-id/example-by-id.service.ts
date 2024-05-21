@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { injectable, inject } from 'inversify';
-import { TYPES } from '../../../../constants/types.constant';
-import { ICarImage } from 'entities/icar-image.entity';
+import { TYPES } from '@/constants/types.constant';
+import { ICarImage } from '@/entities/icar-image.entity';
 
 @injectable()
 export class ExampleByIdService {

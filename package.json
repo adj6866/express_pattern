@@ -1,7 +1,7 @@
 {
-  "name": "clean-code",
+  "name": "express",
   "version": "1.0.0",
-  "description": "pattern clean code",
+  "description": "pattern express",
   "main": "./src/main.ts",
   "scripts": {
     "clean": "rm -rf dist && rm -rf node_modules/.tscache",
