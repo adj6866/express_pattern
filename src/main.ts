@@ -9,6 +9,10 @@ import { container } from '@/utils/inversify.util';
 import { dataSource } from '@/utils/database.util';
 import { HandlerException } from '@/exceptions/handler.exception';
 import { ResposeSuccessMiddleware } from '@/middlewares/response-success.middleware';
+import moment from 'moment-timezone';
+import { SwaggerBuild } from '@/utils/swagger.util';
+
+moment.tz.setDefault('Asia/Jakarta');
 
 async function Bootstrap() {
   const server = new InversifyExpressServer(container);
@@ -21,6 +25,7 @@ async function Bootstrap() {
     app.use(helmet());
     app.use(cors());
     app.use(ResposeSuccessMiddleware);
+    SwaggerBuild(app);
   });
 
   server.setErrorConfig((app) => {
@@ -29,9 +34,9 @@ async function Bootstrap() {
 
   const serverInstance = server.build();
 
-  dataSource.initialize();
-
-  serverInstance.listen(3000);
+  dataSource.initialize().then(() => {
+    serverInstance.listen(3000);
+  }).catch(error => console.log(error));
 }
 
 Bootstrap();

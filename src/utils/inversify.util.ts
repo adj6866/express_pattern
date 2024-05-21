@@ -5,6 +5,7 @@ import { dataSource } from '@/utils/database.util';
 
 // inject controllers
 import '@/features/v1/example/example.controller';
+import '@/controllers/welcome.controller';
 
 // inject entities
 import { NilaiICar } from '@/entities/nilai-icar.entity';

@@ -24,12 +24,12 @@ export class ExampleController extends BaseHttpController {
     this.exampleByIdService = exampleByIdService;
   }
 
-  @httpGet('/')
+  @httpGet('example')
   async getById(): Promise<any> {
     return await this.exampleByIdService.getById();
   }
 
-  @httpPost('/', BaseValidation(ExampleValidation))
+  @httpPost('example', BaseValidation(ExampleValidation))
   async create(): Promise<any> {
     return await this.exampleCreateService.create();
   }

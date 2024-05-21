@@ -1,11 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatus } from '@/constants/http-status.contant';
 
-export function ResposeSuccessMiddleware(_req: Request, res: Response, next: NextFunction) {
+export function ResposeSuccessMiddleware(req: Request, res: Response, next: NextFunction) {
   const originalResponse = res.send.bind(res);
 
+  if (req.originalUrl == '/efe9c963-6e6d-4a3e-9a38-332ce62f4c79') {
+    return next();
+  }
+
   res.send = (body: any) => {
-    if (res.statusCode >= 200 && res.statusCode < 300) {
+    if (
+      res.statusCode >= 200
+      || res.statusCode < 300
+    ) {
       const httpCode = body.httpCode || 200;
       res.status(httpCode);
 
