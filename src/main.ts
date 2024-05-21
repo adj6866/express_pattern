@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import 'reflect-metadata';
+import compression from 'compression';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
@@ -12,6 +13,7 @@ import { ResposeSuccessMiddleware } from '@/middlewares/response-success.middlew
 async function Bootstrap() {
   const server = new InversifyExpressServer(container);
   server.setConfig((app) => {
+    app.use(compression());
     app.use(bodyParser.urlencoded({
       extended: true
     }));
