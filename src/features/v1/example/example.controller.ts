@@ -24,6 +24,23 @@ export class ExampleController extends BaseHttpController {
     this.exampleByIdService = exampleByIdService;
   }
 
+  /**
+   * @swagger
+   * /:
+   *   get:
+   *     description: Welcome controller
+   *     responses:
+   *       200:
+   *         description: OK
+   */
+  @httpGet('/')
+  async index() {
+    return {
+      httpCode: 200,
+      data: null
+    }
+  }
+
   @httpGet('example')
   async getById(): Promise<any> {
     return await this.exampleByIdService.getById();

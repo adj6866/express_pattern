@@ -2,8 +2,7 @@ import { Repository } from 'typeorm';
 import { NilaiICar } from '@/entities/nilai-icar.entity';
 import { injectable, inject } from 'inversify';
 import { TYPES } from '@/constants/types.constant';
-import { plainToInstance } from 'class-transformer';
-import { ExampleCreateDto } from './example-create.dto';
+import { ExampleCreateTransform } from './example-create.transform';
 
 @injectable()
 export class ExampleCreateService {
@@ -22,7 +21,7 @@ export class ExampleCreateService {
 
     return {
       httpCode: 201,
-      data: plainToInstance(ExampleCreateDto, nilaiIcar, { excludeExtraneousValues: true }),
+      data: ExampleCreateTransform.transform(nilaiIcar),
       page: {
         skip: 1,
         limit: 10

@@ -2,8 +2,7 @@ import { Repository } from 'typeorm';
 import { injectable, inject } from 'inversify';
 import { TYPES } from '@/constants/types.constant';
 import { ICarImage } from '@/entities/icar-image.entity';
-import { plainToInstance } from 'class-transformer';
-import { ExampleByIdDto } from './example-by-id.dto';
+import { ExampleByIdTransform } from './example-by-id.transform';
 
 @injectable()
 export class ExampleByIdService {
@@ -24,7 +23,7 @@ export class ExampleByIdService {
 
     return {
       httpCode: 200,
-      data: plainToInstance(ExampleByIdDto, icarImage, { excludeExtraneousValues: true }),
+      data: ExampleByIdTransform.transformArray(icarImage),
       page: {
         skip: 1,
         limit: 10
