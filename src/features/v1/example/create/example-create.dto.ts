@@ -1,13 +1,14 @@
+import { Expose } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class ExampleValidation {
+export class ExampleCreateDto {
   @IsInt()
   @IsNotEmpty()
+  @Expose()
   AuctionItemId: number;
 
   @IsOptional()
   @IsString()
+  @Expose()
   PoliceNo?: string;
-
-  // Tambahkan properti lain dan validasi sesuai kebutuhan
 }

@@ -6,7 +6,7 @@ import {
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
 import { BaseValidation } from '@/validations/base.validation';
-import { ExampleValidation } from './create/example-create.validation';
+import { ExampleCreateDto } from './create/example-create.dto';
 import { ExampleCreateService } from './create/example-create.service';
 import { ExampleByIdService } from './get-by-id/example-by-id.service';
 
@@ -29,7 +29,7 @@ export class ExampleController extends BaseHttpController {
     return await this.exampleByIdService.getById();
   }
 
-  @httpPost('example', BaseValidation(ExampleValidation))
+  @httpPost('example', BaseValidation(ExampleCreateDto))
   async create(): Promise<any> {
     return await this.exampleCreateService.create();
   }

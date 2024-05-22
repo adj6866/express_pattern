@@ -7,18 +7,13 @@ import { HttpStatus } from '@/constants/http-status.contant';
 export function HandlerException(err: Error, _req: Request, res: Response, next: NextFunction) {
   let httpCode = 0;
   let message = '';
+  let errors: any = err.message;
 
   switch (true) {
     case err instanceof UnprocessableEntityException: {
       httpCode = 422;
-
-      res.status(httpCode).json({
-        transactionId: '0f06b466-99dd-4f59-a5df-1ad9f2a84d0a',
-        code: '',
-        data: null,
-        message: HttpStatus[httpCode],
-        errors: (err as UnprocessableEntityException).errors,
-      });
+      message = HttpStatus[httpCode];
+      errors = (err as UnprocessableEntityException).errors;
 
       break;
     }
@@ -45,13 +40,12 @@ export function HandlerException(err: Error, _req: Request, res: Response, next:
     Sentry.captureException(err);
   }
 
-  console.log(err);
   res.status(httpCode).json({
     transactionId: '0f06b466-99dd-4f59-a5df-1ad9f2a84d0a',
     code: '',
     data: null,
     message: HttpStatus[httpCode],
-    errors: err,
+    errors: errors,
   });
 
   next();

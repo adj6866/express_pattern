@@ -8,7 +8,7 @@ import cors from 'cors';
 import { container } from '@/utils/inversify.util';
 import { dataSource } from '@/utils/database.util';
 import { HandlerException } from '@/exceptions/handler.exception';
-import { ResposeSuccessMiddleware } from '@/middlewares/response-success.middleware';
+import { ResponseJson } from '@/middlewares/response-json.middleware';
 import moment from 'moment-timezone';
 import { SwaggerBuild } from '@/utils/swagger.util';
 
@@ -24,7 +24,7 @@ async function Bootstrap() {
     app.use(bodyParser.json());
     app.use(helmet());
     app.use(cors());
-    app.use(ResposeSuccessMiddleware);
+    app.use(ResponseJson);
     SwaggerBuild(app);
   });
 
