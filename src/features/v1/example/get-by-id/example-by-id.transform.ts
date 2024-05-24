@@ -1,14 +1,11 @@
 import { ICarImage } from '@/entities/icar-image.entity';
+import { BaseTransform } from '@/transforms/base.transform';
 
-export class ExampleByIdTransform {
-  static transform(icarImage: ICarImage): any {
+export class ExampleByIdTransform extends BaseTransform {
+  transform(icarImage: ICarImage): any {
     return {
-      AuctionItemId: icarImage.AuctionItemId as number,
-      ImagePath: icarImage.ImagePath as string
+      AuctionItemId: icarImage.AuctionItemId,
+      ImagePath: icarImage.ImagePath
     };
-  }
-
-  static transformArray(icarImages: ICarImage[]): any[] {
-    return icarImages.map(ExampleByIdTransform.transform);
   }
 }
