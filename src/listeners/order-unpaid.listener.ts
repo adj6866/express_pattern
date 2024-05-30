@@ -1,4 +1,4 @@
-import { SbUtil } from "@/utils/service-bus.util";
+import { SbUtil, ServiceBusUtil } from "@/utils/service-bus.util";
 import {
   delay,
   isServiceBusError,
@@ -10,7 +10,7 @@ const topicName = 'doku-create-va';
 const subscriptionName = 'order-unpaid'
 
 export class OrderUnpaidListener {
-  static async listen(): Promise<void> {
+  async listen(): Promise<void> {
     const receiver = SbUtil.createReceiver(topicName, subscriptionName, {
       receiveMode: 'peekLock'
     });
@@ -19,8 +19,7 @@ export class OrderUnpaidListener {
       receiver.subscribe({
         processMessage: async(args: ServiceBusReceivedMessage) => {
           try {
-            console.log('order-unpaid');
-            console.log(`Received message: ${JSON.stringify(args.body)}`);
+            console.log('order-unpaid listener');
             // Your message processing logic here
 
             // After processing, complete the message to remove it from the queue
@@ -61,5 +60,9 @@ export class OrderUnpaidListener {
       console.log("ReceiveMessagesStreaming - Error occurred: ", err);
       process.exit(1);
     }
+  }
+
+  async dlq(): Promise<void> {
+    (new ServiceBusUtil).dlqProcess(topicName, subscriptionName);
   }
 }

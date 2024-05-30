@@ -12,6 +12,7 @@ import { ResponseJson } from '@/middlewares/response-json.middleware';
 import moment from 'moment-timezone';
 import { SwaggerBuild } from '@/utils/swagger.util';
 import { BaseListener } from './listeners/base.listener';
+import retry from 'async-retry';
 
 moment.tz.setDefault('Asia/Jakarta');
 
@@ -38,8 +39,18 @@ async function Bootstrap() {
   // run service bus
   BaseListener.run();
 
-  dataSource.initialize().then(() => {
-    serverInstance.listen(3000);
+  await retry(async bail => {
+    try {
+      await dataSource.initialize();
+      console.log('server running port: 3000');
+      serverInstance.listen(3000);
+    } catch (err) {
+      console.log('Failed to connect to the database, retrying...');
+      bail(err);
+    }
+  }, {
+    retries: 10,
+    minTimeout: 5000,
   }).catch(error => console.log(error));
 }
 

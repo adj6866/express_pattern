@@ -1,4 +1,4 @@
-import { SbUtil } from "@/utils/service-bus.util";
+import { SbUtil, ServiceBusUtil } from "@/utils/service-bus.util";
 import {
   delay,
   isServiceBusError,
@@ -10,7 +10,7 @@ const topicName = 'doku-create-va';
 const subscriptionName = 'email'
 
 export class EmailListener {
-  static async listen(): Promise<void> {
+  async listen(): Promise<void> {
     const receiver = SbUtil.createReceiver(topicName, subscriptionName, {
       receiveMode: 'peekLock'
     });
@@ -19,12 +19,11 @@ export class EmailListener {
       receiver.subscribe({
         processMessage: async(args: ServiceBusReceivedMessage) => {
           try {
-            console.log('email');
-            console.log(`Received message: ${JSON.stringify(args.body)}`);
+            console.log('email listener process');
             // Your message processing logic here
 
             // throw todlq
-            // throw new Error(`Received message: ${JSON.stringify(args.body)}`);
+            throw new Error(`Throw message: ${JSON.stringify(args.body)}`);
 
             // After processing, complete the message to remove it from the queue
             await receiver.completeMessage(args);
@@ -69,36 +68,6 @@ export class EmailListener {
   }
 
   async dlq(): Promise<void> {
-    const receiver = SbUtil.createReceiver(topicName, subscriptionName, {
-      receiveMode: 'peekLock',
-      subQueueType: 'deadLetter',
-    });
-
-    const messages = await receiver.receiveMessages(1);
-
-    try {
-      if (messages.length > 0) {
-        const message = messages[0];
-        console.log('DLQ START');
-
-        // Processing logic goes here
-        const sendToQueue = SbUtil.createSender(topicName);
-        await sendToQueue.sendMessages({
-          body: message.body,
-          applicationProperties: {
-            label: subscriptionName
-          }
-        });
-
-        await receiver.completeMessage(message);
-        console.log('DLQ completed ' + topicName + subscriptionName);
-      } else {
-        console.log('no message dlq');
-      }
-    } catch (error) {
-      // logic if waktu expired dan tidak dikirim ke main queue
-      console.log(error);
-      console.log('error dlq to main queue');
-    }
+    (new ServiceBusUtil).dlqProcess(topicName, subscriptionName);
   }
 }

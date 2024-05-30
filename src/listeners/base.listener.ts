@@ -1,12 +1,13 @@
 import { EmailListener } from './email.listener';
 import { OrderUnpaidListener } from './order-unpaid.listener';
 
-export class BaseListener {
+export abstract class BaseListener {
   static async run(): Promise<void> {
     await Promise.all([
-      EmailListener.listen(),
-      // EmailListener.dlq(),
-      OrderUnpaidListener.listen(),
+      (new EmailListener).listen(),
+      (new EmailListener).dlq(),
+      (new OrderUnpaidListener).listen(),
+      (new OrderUnpaidListener).dlq()
     ]);
   }
 }
