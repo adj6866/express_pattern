@@ -14,6 +14,7 @@ export function ResponseJson(req: Request, res: Response, next: NextFunction) {
       && res.statusCode < 300
     ) {
       const httpCode = body.httpCode || 200;
+      res.set('Content-Type', 'application/json');
       res.status(httpCode);
 
       const result = {
