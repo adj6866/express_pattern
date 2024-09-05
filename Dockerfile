@@ -1,25 +1,30 @@
-FROM node:22-alpine AS build
+###################
+# BUILD
+###################
 
-# Create directory
+FROM node:20-alpine AS build
+
+WORKDIR /app
+COPY . /app
+RUN npm install && npm run build
+
+###################
+# DEPLOY
+###################
+
+FROM node:20-alpine AS deploy
+
+ENV TZ=Asia/Jakarta
+
 WORKDIR /app
 
-# Copy all files
-COPY . .
-
-# Install typescript, nodemon globally
-RUN npm install -g typescript
-RUN npm install -g nodemon
-RUN npm cache clean --force
-
-# Install package
-RUN npm install
-
-# Build to project
-RUN npm run build
-
-# Expose to port 3000
 EXPOSE 3000
 
 EXPOSE 8080
-# Run node server
-CMD npm run start
+
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/tsconfig*.json ./
+COPY --from=build /app/.env ./.env
+CMD [ "node", "dist/app.js" ]

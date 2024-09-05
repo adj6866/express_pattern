@@ -1,4 +1,4 @@
-export const HttpStatus = {
+export const HTTP_STATUS = {
   100: 'CONTINUE',
   101: 'SWITCHING_PROTOCOLS',
   102: 'PROCESSING',

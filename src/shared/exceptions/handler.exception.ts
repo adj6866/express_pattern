@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CustomErrorException } from './custom-error.exception';
 import * as Sentry from '@sentry/node';
 import { UnprocessableEntityException } from './unprocessable-entity.exception';
-import { HttpStatus } from '@/constants/http-status.contant';
+import { HTTP_STATUS } from '@/shared/constants/http-status.contant';
 
 export function HandlerException(err: Error, _req: Request, res: Response, next: NextFunction) {
   let httpCode = 0;
@@ -12,7 +12,7 @@ export function HandlerException(err: Error, _req: Request, res: Response, next:
   switch (true) {
     case err instanceof UnprocessableEntityException: {
       httpCode = 422;
-      message = HttpStatus[httpCode];
+      message = HTTP_STATUS[httpCode];
       errors = (err as UnprocessableEntityException).errors;
 
       break;
@@ -44,7 +44,7 @@ export function HandlerException(err: Error, _req: Request, res: Response, next:
     transactionId: '0f06b466-99dd-4f59-a5df-1ad9f2a84d0a',
     code: '',
     data: null,
-    message: HttpStatus[httpCode],
+    message: HTTP_STATUS[httpCode],
     errors: errors,
   });
 

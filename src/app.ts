@@ -1,17 +1,17 @@
 import 'dotenv/config';
-import 'reflect-metadata';
-import compression from 'compression';
-import { InversifyExpressServer } from 'inversify-express-utils';
-import * as bodyParser from 'body-parser';
-import helmet from 'helmet';
 import cors from 'cors';
-import { container } from '@/utils/inversify.util';
-import { dataSource } from '@/utils/database.util';
-import { HandlerException } from '@/exceptions/handler.exception';
-import { ResponseJson } from '@/middlewares/response-json.middleware';
+import 'reflect-metadata';
+import helmet from 'helmet';
 import moment from 'moment-timezone';
-import { SwaggerBuild } from '@/utils/swagger.util';
-import { BaseListener } from './listeners/base.listener';
+import compression from 'compression';
+import * as bodyParser from 'body-parser';
+import { InversifyExpressServer } from 'inversify-express-utils';
+import { container } from '@/infrastructures/config/inversify.config';
+import { dataSource } from '@/infrastructures/config/database.config';
+import { HandlerException } from '@/shared/exceptions/handler.exception';
+import { ResponseJson } from '@/shared/middlewares/response-json.middleware';
+import { SwaggerBuild } from '@/infrastructures/config/swagger.config';
+// import { BaseListener } from './listeners/base.listener';
 import retry from 'async-retry';
 
 moment.tz.setDefault('Asia/Jakarta');
@@ -37,7 +37,7 @@ async function Bootstrap() {
   const serverInstance = server.build();
 
   // run service bus
-  BaseListener.run();
+  // BaseListener.run();
 
   await retry(async bail => {
     try {

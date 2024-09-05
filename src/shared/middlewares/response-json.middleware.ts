@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpStatus } from '@/constants/http-status.contant';
+import { HTTP_STATUS } from '@/shared/constants/http-status.contant';
 
 export function ResponseJson(req: Request, res: Response, next: NextFunction) {
   const originalResponse = res.send.bind(res);
@@ -20,7 +20,7 @@ export function ResponseJson(req: Request, res: Response, next: NextFunction) {
       const result = {
         transactionId: '0f06b466-99dd-4f59-a5df-1ad9f2a84d0a',
         code: '',
-        message: HttpStatus[body.httpCode] || 'OK',
+        message: HTTP_STATUS[body.httpCode] || 'OK',
         eTag: 'pfmKgK6RpIkgkAAYukTfo21KRTyCwpiA',
         data: body.data || null
       }
