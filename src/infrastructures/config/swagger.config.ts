@@ -28,7 +28,7 @@ const options: swaggerJsdoc.Options = {
 
 const swaggerDocs = swaggerJsdoc(options);
 
-export const SwaggerBuild =  (app: Application) => {
+export const swaggerBuild =  (app: Application) => {
   app.use('/efe9c963-6e6d-4a3e-9a38-332ce62f4c79', (_req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerDocs);

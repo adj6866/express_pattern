@@ -10,8 +10,8 @@ import { container } from '@/infrastructures/config/inversify.config';
 import { dataSource } from '@/infrastructures/config/database.config';
 import { HandlerException } from '@/shared/exceptions/handler.exception';
 import { ResponseJson } from '@/shared/middlewares/response-json.middleware';
-import { SwaggerBuild } from '@/infrastructures/config/swagger.config';
-// import { BaseListener } from './listeners/base.listener';
+import { swaggerBuild } from '@/infrastructures/config/swagger.config';
+import { listenSubscribes } from '@/events/subscribers';
 import retry from 'async-retry';
 
 moment.tz.setDefault('Asia/Jakarta');
@@ -27,7 +27,7 @@ async function Bootstrap() {
     app.use(helmet());
     app.use(cors());
     app.use(ResponseJson);
-    SwaggerBuild(app);
+    swaggerBuild(app);
   });
 
   server.setErrorConfig((app) => {
@@ -37,7 +37,7 @@ async function Bootstrap() {
   const serverInstance = server.build();
 
   // run service bus
-  // BaseListener.run();
+  listenSubscribes();
 
   await retry(async bail => {
     try {
