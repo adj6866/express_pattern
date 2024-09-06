@@ -17,6 +17,7 @@ export function ValidationBase(type: any): (req: Request, res: Response, next: N
         return next(new UnprocessableEntityException(errorFields, 422));
       }
 
+      req.body = dtoInstance;
       next();
     }).catch(next);
   };

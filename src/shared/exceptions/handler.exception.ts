@@ -13,13 +13,12 @@ export function HandlerException(err: Error, _req: Request, res: Response, next:
     case err instanceof UnprocessableEntityException: {
       httpCode = 422;
       message = HTTP_STATUS[httpCode];
-      errors = (err as UnprocessableEntityException).errors;
-
+      errors = err.errors;
       break;
     }
 
     case err instanceof CustomErrorException: {
-      httpCode = (err as CustomErrorException).httpCode;
+      httpCode = err.httpCode;
       message = err.message;
       break;
     }
