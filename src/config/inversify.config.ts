@@ -1,13 +1,13 @@
 import { Container } from 'inversify';
 import { DataSource } from "typeorm"
+import { dataSource } from '@/config';
 import { TYPES } from '@/shared/constants/type.contant';
-import { dataSource } from '@/infrastructures/config/database.config';
 
 // inject controllers
 import '@/features/welcome.controller';
 
 // inject entities
-import { ICarImage } from '@/infrastructures/database/entities/icar-image.entity';
+import { ICarImage } from '@/database/entities/icar-image.entity';
 
 export const container = new Container({ autoBindInjectable: true });
 

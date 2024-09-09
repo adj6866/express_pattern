@@ -3,7 +3,7 @@ import { validate } from 'class-validator';
 import { UnprocessableEntityException } from '@/shared/exceptions/unprocessable-entity.exception';
 import { Request, Response, NextFunction } from 'express';
 
-export function ValidationBase(type: any): (req: Request, res: Response, next: NextFunction) => void {
+export function BaseValidation(type: any): (req: Request, res: Response, next: NextFunction) => void {
   return (req: Request, _res: Response, next: NextFunction) => {
     const dtoInstance = plainToInstance(type, req.body);
 

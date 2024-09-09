@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.24.1",
+    "@types/async-retry": "^1.4.8",
     "@types/body-parser": "^1.19.2",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",

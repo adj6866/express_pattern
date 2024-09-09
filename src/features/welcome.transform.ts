@@ -1,7 +1,7 @@
-import { TransformBase } from '@/shared/base/transform.base';
-import { ICarImage } from '@/infrastructures/database/entities/icar-image.entity';
+import { BaseTransform } from '@/shared/base/base-transform';
+import { ICarImage } from '@/database/entities/icar-image.entity';
 
-export class WelcomeTransform extends TransformBase {
+export class WelcomeTransform extends BaseTransform {
   transform(icarImage: ICarImage): any {
     return {
       AuctionItemId: icarImage.AuctionItemId,

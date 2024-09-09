@@ -1,18 +1,20 @@
+import {
+  container,
+  dataSource,
+  swaggerBuild
+} from '@/config';
 import 'dotenv/config';
 import cors from 'cors';
 import 'reflect-metadata';
 import helmet from 'helmet';
+import retry from 'async-retry';
 import moment from 'moment-timezone';
 import compression from 'compression';
 import * as bodyParser from 'body-parser';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import { container } from '@/infrastructures/config/inversify.config';
-import { dataSource } from '@/infrastructures/config/database.config';
 import { HandlerException } from '@/shared/exceptions/handler.exception';
 import { ResponseJson } from '@/shared/middlewares/response-json.middleware';
-import { swaggerBuild } from '@/infrastructures/config/swagger.config';
-import { listenSubscribes } from '@/events/subscribers';
-import retry from 'async-retry';
+import { listenSubscribes } from './events/subscribers';
 
 moment.tz.setDefault('Asia/Jakarta');
 
@@ -45,8 +47,11 @@ async function Bootstrap() {
       console.log('server running port: 3000');
       serverInstance.listen(3000);
     } catch (err) {
-      console.log('Failed to connect to the database, retrying...');
-      bail(err);
+      if (err instanceof Error) {
+        bail(err);
+      } else {
+        console.log('Unknown error occurred');
+      }
     }
   }, {
     retries: 10,

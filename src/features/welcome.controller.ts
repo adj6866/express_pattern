@@ -1,6 +1,6 @@
-// import { sbClient } from '@/integrations/thrid-party/service-bus.thrid';
+// import { sbClient } from '@/config/service-bus.config';
 // import { ServiceBusMessage } from '@azure/service-bus';
-import { ValidationBase } from '@/shared/base/validation.base';
+import { BaseValidation } from '@/shared/base';
 import {
   BaseHttpController,
   controller,
@@ -8,12 +8,12 @@ import {
   httpPost,
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
-import { WelcomeDto } from './welcome.dto';
 import { Request } from 'express';
-import { TYPES } from '@/shared/constants/type.contant';
 import { Repository } from 'typeorm';
-import { ICarImage } from '@/infrastructures/database/entities/icar-image.entity';
+import { WelcomeDto } from './welcome.dto';
+import { TYPES } from '@/shared/constants/type.contant';
 import { WelcomeTransform } from './welcome.transform';
+import { ICarImage } from '@/database/entities/icar-image.entity';
 
 
 @controller('/')
@@ -38,7 +38,8 @@ export class ExampleController extends BaseHttpController {
    */
   @httpGet('/')
   async index() {
-    // example service bus create publisher topic
+    // example service bus create publisher topic, recommend you create at events/publishers
+    // so everybody know how much publisher in a microservices
     // const sender = sbClient.createSender('finance-create-payment');
 
     // const message: ServiceBusMessage = {
@@ -63,7 +64,7 @@ export class ExampleController extends BaseHttpController {
     * @param {Request} req - The incoming HTTP request.
     * @return {Promise<any>} A promise containing the HTTP response.
     */
-  @httpPost('example-validate', ValidationBase(WelcomeDto))
+  @httpPost('example-validate', BaseValidation(WelcomeDto))
   async exampleValidate(req: Request) : Promise<any> {
     const body: WelcomeDto = req.body;
     return {
