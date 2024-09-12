@@ -1,7 +1,6 @@
 import { DataSource } from "typeorm"
 import { join } from 'path';
 
-console.log(join(__dirname, '../database/entities/*.entity{.ts,.js}'));
 export const dataSource = new DataSource({
   type: 'mssql',
   host: process.env.DB_HOST,

@@ -1,9 +1,9 @@
+import 'dotenv/config';
 import {
   container,
   dataSource,
   swaggerBuild
 } from '@/config';
-import 'dotenv/config';
 import cors from 'cors';
 import 'reflect-metadata';
 import helmet from 'helmet';

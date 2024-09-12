@@ -1,8 +1,8 @@
+import * as Sentry from '@sentry/node';
 import { Request, Response, NextFunction } from 'express';
 import { CustomErrorException } from './custom-error.exception';
-import * as Sentry from '@sentry/node';
+import { HTTP_STATUS } from '@/shared/constants/http-status.constant';
 import { UnprocessableEntityException } from './unprocessable-entity.exception';
-import { HTTP_STATUS } from '@/shared/constants/http-status.contant';
 
 export function HandlerException(err: Error, _req: Request, res: Response, next: NextFunction) {
   let httpCode = 0;
@@ -38,7 +38,7 @@ export function HandlerException(err: Error, _req: Request, res: Response, next:
     Sentry.captureMessage(message);
     Sentry.captureException(err);
   }
-
+  console.log(err);
   res.status(httpCode).json({
     transactionId: '0f06b466-99dd-4f59-a5df-1ad9f2a84d0a',
     code: '',

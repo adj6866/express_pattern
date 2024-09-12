@@ -1,22 +1,20 @@
-import { listenProcess, dlqProcess } from "@/integrations/thrid-party/service-bus.thrid";
+import { pubSubConfig } from "@/config/pubsub.config";
 import { ServiceBusReceivedMessage } from "@azure/service-bus";
 
+const pubSub = pubSubConfig();
 const topicName = 'finance-create-payment';
 const subscriptionName = 'send-email-payment-method';
 
 const listen = async() : Promise<void> => {
-  const processMessageLogic = async (message: ServiceBusReceivedMessage) => {
-    console.log(`from ${topicName}/${subscriptionName} sent to DLQ ${message.messageId}`);
+  await pubSub.subscribe(topicName, subscriptionName, async(message: ServiceBusReceivedMessage) => {
+    console.log(`dlq ${JSON.stringify(message.body)} ${topicName}/${subscriptionName}`);
     // Tambahkan logika khusus yang diinginkan di sini
-    // throw new Error('test error');
-  };
-
-  // Call the generic listener
-  await listenProcess(topicName, subscriptionName, processMessageLogic);
+    throw new Error('test error');
+  });
 }
 
 const dlq = async () : Promise<void> => {
-  await dlqProcess(topicName, subscriptionName);
+  await pubSub.dlq(topicName, subscriptionName);
 }
 
 export { listen, dlq };

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { HTTP_STATUS } from '@/shared/constants/http-status.contant';
+import { HTTP_STATUS } from '@/shared/constants/http-status.constant';
 
 export function ResponseJson(req: Request, res: Response, next: NextFunction) {
   const originalResponse = res.send.bind(res);
