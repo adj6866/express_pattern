@@ -8,17 +8,26 @@ import {
   ServiceBusMessage,
 } from '@azure/service-bus';
 
-// https://github.com/Azure/azure-sdk-for-js/tree/%40azure/service-bus_7.7.1/sdk/servicebus
-const connectionString = process.env.SB_CONNECTION_STRING;
-const sbClient = new ServiceBusClient(connectionString, {
-  retryOptions: {
-    maxRetries: 5,
-    retryDelayInMs: 30000,
-  },
-});
-
 export class ServiceBusThird implements PubSubInterface {
+  private static sbClient: ServiceBusClient;
+
+  private static getClient(): ServiceBusClient {
+    // https://github.com/Azure/azure-sdk-for-js/tree/%40azure/service-bus_7.7.1/sdk/servicebus
+    const connectionString = process.env.SB_CONNECTION_STRING;
+    if (!ServiceBusThird.sbClient) {
+      ServiceBusThird.sbClient = new ServiceBusClient(connectionString, {
+        retryOptions: {
+          maxRetries: 5,
+          retryDelayInMs: 30000,
+        },
+      });
+    }
+
+    return ServiceBusThird.sbClient;
+  }
+
   async publish(topicName: string, body: any) {
+    const sbClient = ServiceBusThird.getClient();
     const sender = sbClient.createSender(topicName);
     const message : ServiceBusMessage = {
       body: body,
@@ -31,6 +40,7 @@ export class ServiceBusThird implements PubSubInterface {
   }
 
   async subscribe(topicName: string, subscriptionName: string, processMessageCallback: (message: ServiceBusReceivedMessage) => Promise<void>): Promise<void> {
+    const sbClient = ServiceBusThird.getClient();
     const receiver = sbClient.createReceiver(topicName, subscriptionName, {
       receiveMode: 'peekLock'
     });
@@ -75,6 +85,7 @@ export class ServiceBusThird implements PubSubInterface {
   }
 
   async dlq(topicName: string, subscriptionName: string): Promise<void> {
+    const sbClient = ServiceBusThird.getClient();
     // eslint-disable-next-line no-constant-condition
     while (true) {
       const receiver = sbClient.createReceiver(topicName, subscriptionName, {

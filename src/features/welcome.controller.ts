@@ -1,5 +1,5 @@
-import { pubSubConfig } from '@/config/pubsub.config';
-import { emailConfig, renderBody } from '@/config/email.config';
+import { default as pubSub } from '@/config/pubsub.config';
+import { default as email, renderBody } from '@/config/email.config';
 import {
   BaseHttpController,
   controller,
@@ -22,10 +22,8 @@ export class ExampleController extends BaseHttpController {
    */
   @httpGet('/')
   async index() {
-    const pubSub = pubSubConfig();
     pubSub.publish('finance-create-payment', { content: "foo" });
 
-    const email = emailConfig();
     await email.send(
       { to: 'ahmaddjunaedi92@gmail.com' },
       await renderBody(path.resolve(__dirname, '../shared/resources/emails/forgot-password.ejs'), {

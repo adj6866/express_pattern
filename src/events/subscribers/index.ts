@@ -1,14 +1,14 @@
-import { dlq as createBillDlq, listen as createBillListen } from './create-bill.subscribe';
-import { dlq as sendEmailPaymentDlq, listen as sendEmailPaymentListen } from './send-email-payment-method.subscribe';
+import { dlq as dlqSendNotifUnpaid, listen as listenSendNotifUnpaid } from './send-notification-unpaid.subscribe';
+import { dlq as dlqSendEmailPaymentMethod, listen as listenSendEmailPaymentMethod } from './send-email-payment-method.subscribe';
 
 const subscribes = [
   {
-    listen: createBillListen,
-    dlq: createBillDlq
+    listen: listenSendNotifUnpaid,
+    dlq: dlqSendNotifUnpaid
   },
   {
-    listen: sendEmailPaymentDlq,
-    dlq: sendEmailPaymentListen
+    listen: dlqSendEmailPaymentMethod,
+    dlq: listenSendEmailPaymentMethod
   }
 ];
 

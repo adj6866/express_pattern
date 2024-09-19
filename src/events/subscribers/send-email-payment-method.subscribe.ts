@@ -1,8 +1,7 @@
-import { pubSubConfig } from "@/config/pubsub.config";
+import { default as pubSub } from "@/config/pubsub.config";
 import { ServiceBusReceivedMessage } from "@azure/service-bus";
 
-const pubSub = pubSubConfig();
-const topicName = 'finance-create-payment';
+const topicName = 'finance-order-unpaid';
 const subscriptionName = 'send-email-payment-method';
 
 const listen = async() : Promise<void> => {

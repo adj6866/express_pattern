@@ -1,16 +1,27 @@
 import { Microsoft365 } from "@/integrations/thrid-party/microsoft-365.thrid";
 import * as ejs from 'ejs';
 
-export function emailConfig() {
-  const service = process.env.EMAIL_SERVICE || 'microsoft-365'
-  switch (service) {
-    case 'microsoft-365':
-      return new Microsoft365();
-    default:
-      throw new Error('Unknown email service');
+class EmailConfig {
+  private static instance: any;
+
+  private constructor() {}
+
+  public static getInstance() {
+    if (!EmailConfig.instance) {
+      const service = process.env.EMAIL_SERVICE || 'microsoft-365'
+      switch (service) {
+        case 'microsoft-365':
+          return new Microsoft365();
+        default:
+          throw new Error('Unknown email service');
+      }
+    }
+
+    return EmailConfig.instance;
   }
 }
 
+export default EmailConfig.getInstance();
 
 export async function renderBody(templatePath: string, data: any): Promise<string> {
   try {
