@@ -7,7 +7,7 @@ export function BaseValidation(type: any): (req: Request, res: Response, next: N
   return (req: Request, _res: Response, next: NextFunction) => {
     const dtoInstance = plainToInstance(type, req.body);
 
-    validate(dtoInstance).then((errors) => {
+    validate(dtoInstance, { whitelist: true, forbidNonWhitelisted: false }).then(errors => {
       if (errors.length > 0) {
         const errorFields = errors.map((element) => ({
           field: element.property,
