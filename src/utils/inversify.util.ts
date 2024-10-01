@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
 import { DataSource } from "typeorm"
-import { dataSource } from '@/config';
+import { dataSource } from '@/utils';
 import { TYPES } from '@/shared/constants/type.constant';
 
 // inject controllers

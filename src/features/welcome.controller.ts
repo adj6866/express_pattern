@@ -1,11 +1,12 @@
-import { default as pubSub } from '@/config/pubsub.config';
-import { default as email, renderBody } from '@/config/email.config';
+// import { default as pubSub } from '@/config/pubsub.config';
+import { default as email, renderBody } from '@/utils/email.util';
 import {
   BaseHttpController,
   controller,
-  httpGet,
+  httpPost,
 } from 'inversify-express-utils';
 import * as path from 'path';
+import { Request } from 'express';
 
 
 @controller('/')
@@ -20,22 +21,29 @@ export class ExampleController extends BaseHttpController {
    *       200:
    *         description: OK
    */
-  @httpGet('/')
-  async index() {
-    pubSub.publish('finance-create-payment', { content: "foo" });
+  @httpPost('/')
+  async index(req: Request) {
+    // pubSub.publish('finance-create-payment', { content: "foo" });
 
     await email.send(
-      { to: 'ahmaddjunaedi92@gmail.com' },
-      await renderBody(path.resolve(__dirname, '../shared/resources/emails/forgot-password.ejs'), {
-        url_reset_password: 'https://example.com/reset-password',
-        url_contact_us: 'https://example.com/contact-us'
-      })
+      {
+        to: 'ahmaddjunaedi92@gmail.com',
+        subject: 'Astra Car Valuation - Pelunasan Pembayaran Inspeksi',
+      },
+      await renderBody(
+        path.resolve(
+          __dirname,
+          '../shared/resources/emails/payment-method-virtual-account.ejs'
+        ),
+        {
+          data: req.body,
+        }
+      )
     );
 
     return {
       httpCode: 200,
       data: null
     }
-
   }
 }

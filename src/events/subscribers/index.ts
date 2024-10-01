@@ -1,15 +1,21 @@
-import { dlq as dlqSendNotifUnpaid, listen as listenSendNotifUnpaid } from './send-notification-unpaid.subscribe';
-import { dlq as dlqSendEmailPaymentMethod, listen as listenSendEmailPaymentMethod } from './send-email-payment-method.subscribe';
+import {
+  listen as listenSendNotifUnpaid,
+  dlq as dlqSendNotifUnpaid,
+} from './send-notification-unpaid.subscribe';
+import {
+  listen as listenSendEmailPaymentMethod,
+  dlq as dlqSendEmailPaymentMethod,
+} from './send-email-payment-method.subscribe';
 
 const subscribes = [
   {
     listen: listenSendNotifUnpaid,
-    dlq: dlqSendNotifUnpaid
+    dlq: dlqSendNotifUnpaid,
   },
   {
-    listen: dlqSendEmailPaymentMethod,
-    dlq: listenSendEmailPaymentMethod
-  }
+    listen: listenSendEmailPaymentMethod,
+    dlq: dlqSendEmailPaymentMethod,
+  },
 ];
 
 /**
@@ -18,8 +24,8 @@ const subscribes = [
  * @return {Promise<void>} A promise that resolves when all listen and dlq functions have been executed.
  */
 export const listenSubscribes = async (): Promise<void> => {
-  subscribes.forEach(subscribe => {
+  subscribes.forEach((subscribe) => {
     subscribe.listen();
     subscribe.dlq();
   });
-}
+};

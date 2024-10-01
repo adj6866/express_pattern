@@ -4,7 +4,7 @@ import * as path from 'path';
 import NodeCache from 'node-cache';
 import { EmailInterface } from '@/shared/interfaces/email.interface';
 
-export class Microsoft365 implements EmailInterface {
+export class Microsoft365Third implements EmailInterface {
   private client: AxiosInstance;
   private tokenCache: NodeCache;
 
@@ -54,7 +54,9 @@ export class Microsoft365 implements EmailInterface {
     }
 
     if (attachmentPath) {
-      const attachmentContent = fs.readFileSync(attachmentPath).toString('base64');
+      const attachmentContent = fs
+        .readFileSync(attachmentPath)
+        .toString('base64');
       emailBody.message.attachments = [
         {
           '@odata.type': '#microsoft.graph.fileAttachment',

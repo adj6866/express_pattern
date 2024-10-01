@@ -1,4 +1,4 @@
-import { PubSubInterface } from "@/shared/interfaces/pubsub.interface";
+import { PubSubInterface } from '@/shared/interfaces/pubsub.interface';
 import {
   ServiceBusClient,
   delay,
@@ -29,20 +29,26 @@ export class ServiceBusThird implements PubSubInterface {
   async publish(topicName: string, body: any) {
     const sbClient = ServiceBusThird.getClient();
     const sender = sbClient.createSender(topicName);
-    const message : ServiceBusMessage = {
+    const message: ServiceBusMessage = {
       body: body,
       contentType: 'application/json',
       applicationProperties: {
-        topic_name: topicName
-      }
-    }
+        topic_name: topicName,
+      },
+    };
     sender.sendMessages(message);
   }
 
-  async subscribe(topicName: string, subscriptionName: string, processMessageCallback: (message: ServiceBusReceivedMessage) => Promise<void>): Promise<void> {
+  async subscribe(
+    topicName: string,
+    subscriptionName: string,
+    processMessageCallback: (
+      message: ServiceBusReceivedMessage
+    ) => Promise<void>
+  ): Promise<void> {
     const sbClient = ServiceBusThird.getClient();
     const receiver = sbClient.createReceiver(topicName, subscriptionName, {
-      receiveMode: 'peekLock'
+      receiveMode: 'peekLock',
     });
 
     try {
@@ -63,23 +69,25 @@ export class ServiceBusThird implements PubSubInterface {
 
           if (isServiceBusError(args.error)) {
             switch (args.error.code) {
-              case "MessagingEntityDisabled":
-              case "MessagingEntityNotFound":
-              case "UnauthorizedAccess":
-                console.error(`Unrecoverable error occurred: ${args.error.code}`);
+              case 'MessagingEntityDisabled':
+              case 'MessagingEntityNotFound':
+              case 'UnauthorizedAccess':
+                console.error(
+                  `Unrecoverable error occurred: ${args.error.code}`
+                );
                 break;
-              case "MessageLockLost":
-                console.warn("Message lock lost:", args.error);
+              case 'MessageLockLost':
+                console.warn('Message lock lost:', args.error);
                 break;
-              case "ServiceBusy":
+              case 'ServiceBusy':
                 await delay(1000);
                 break;
             }
           }
-        }
+        },
       });
     } catch (err) {
-      console.error("Error occurred while receiving messages:", err);
+      console.error('Error occurred while receiving messages:', err);
       process.exit(1);
     }
   }
@@ -105,8 +113,8 @@ export class ServiceBusThird implements PubSubInterface {
           await sendToQueue.sendMessages({
             body: message.body,
             applicationProperties: {
-              subscription_name: subscriptionName
-            }
+              subscription_name: subscriptionName,
+            },
           });
 
           await receiver.completeMessage(message);
@@ -120,7 +128,7 @@ export class ServiceBusThird implements PubSubInterface {
         console.log('error dlq to main queue');
       }
 
-      await delay(20000);
+      await delay(20000); // 20 seconds
     }
   }
 }
