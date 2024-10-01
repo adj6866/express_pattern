@@ -1,18 +1,18 @@
 import 'dotenv/config';
-import 'reflect-metadata';
-import compression from 'compression';
-import { InversifyExpressServer } from 'inversify-express-utils';
-import * as bodyParser from 'body-parser';
-import helmet from 'helmet';
+import { container, dataSource, swaggerBuild } from '@/utils';
 import cors from 'cors';
-import { container } from '@/utils/inversify.util';
-import { dataSource } from '@/utils/database.util';
-import { HandlerException } from '@/exceptions/handler.exception';
-import { ResponseJson } from '@/middlewares/response-json.middleware';
-import moment from 'moment-timezone';
-import { SwaggerBuild } from '@/utils/swagger.util';
-import { BaseListener } from './listeners/base.listener';
+import 'reflect-metadata';
+import helmet from 'helmet';
 import retry from 'async-retry';
+import moment from 'moment-timezone';
+import compression from 'compression';
+import * as bodyParser from 'body-parser';
+import { InversifyExpressServer } from 'inversify-express-utils';
+import { HandlerException } from '@/shared/exceptions/handler.exception';
+import { ResponseJson } from '@/shared/middlewares/response-json.middleware';
+import { listenSubscribes } from './events/subscribers';
+import path from 'path';
+import express from 'express';
 
 moment.tz.setDefault('Asia/Jakarta');
 
@@ -20,14 +20,17 @@ async function Bootstrap() {
   const server = new InversifyExpressServer(container);
   server.setConfig((app) => {
     app.use(compression());
-    app.use(bodyParser.urlencoded({
-      extended: true
-    }));
+    app.use(
+      bodyParser.urlencoded({
+        extended: true,
+      })
+    );
     app.use(bodyParser.json());
     app.use(helmet());
     app.use(cors());
     app.use(ResponseJson);
-    SwaggerBuild(app);
+    app.use('/public/banks', express.static(path.join(__dirname, '../public/banks')));
+    swaggerBuild(app);
   });
 
   server.setErrorConfig((app) => {
@@ -37,21 +40,27 @@ async function Bootstrap() {
   const serverInstance = server.build();
 
   // run service bus
-  BaseListener.run();
+  listenSubscribes();
 
-  await retry(async bail => {
-    try {
-      await dataSource.initialize();
-      console.log('server running port: 3000');
-      serverInstance.listen(3000);
-    } catch (err) {
-      console.log('Failed to connect to the database, retrying...');
-      bail(err);
+  await retry(
+    async (bail) => {
+      try {
+        await dataSource.initialize();
+        console.log('server running port: 3000');
+        serverInstance.listen(3000);
+      } catch (err) {
+        if (err instanceof Error) {
+          bail(err);
+        } else {
+          console.log('Unknown error occurred');
+        }
+      }
+    },
+    {
+      retries: 10,
+      minTimeout: 5000,
     }
-  }, {
-    retries: 10,
-    minTimeout: 5000,
-  }).catch(error => console.log(error));
+  ).catch((error) => console.log(error));
 }
 
 Bootstrap();

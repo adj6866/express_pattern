@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title></title>
+    <!--[if mso]>
+      <noscript>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+      </noscript>
+    <![endif]-->
+    <style>
+      table,
+      td,
+      div,
+      h1,
+      p {
+        font-family: Helvetica, sans-serif;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0">
+    <table
+      role="presentation"
+      style="
+        width: 100%;
+        border-collapse: collapse;
+        border: 0;
+        border-spacing: 0;
+        background: #fbfbfb;
+      "
+    >
+      <tr>
+        <td
+          align="center"
+          style="
+            width: 600px !important;
+            clear: both !important;
+            margin: 0 auto;
+            padding: 0;
+          "
+        >
+          <table
+            role="presentation"
+            style="
+              width: 600px;
+              border-collapse: collapse;
+              border: 1px solid #cccccc;
+              border-spacing: 0;
+              text-align: left;
+              background: #ffffff;
+            "
+          >
+            <!--Header-->
+            <%- include('components/header.ejs', { title: 'Pelunasan Pembayaran Inspeksi' }) %>
+            <!--Content-->
+            <tr>
+              <td style="padding: 36px 30px 42px 30px">
+                <table
+                  role="presentation"
+                  style="
+                    width: 100%;
+                    border-collapse: collapse;
+                    border: 0;
+                    border-spacing: 0;
+                  "
+                >
+                  <tr>
+                    <td style="padding: 0">
+                      <table
+                        role="presentation"
+                        style="
+                          width: 100%;
+                          border-collapse: collapse;
+                          border: 0;
+                          border-spacing: 0;
+                        "
+                      >
+                        <tr>
+                          <td
+                            style="
+                              width: 540px;
+                              padding: 0;
+                              vertical-align: top;
+                              color: #4a4a4a;
+                            "
+                          >
+                            <div style="width: 540px; display: block">
+                              <p style="margin: 0">
+                                <img
+                                  src=""
+                                  alt=""
+                                  width="540"
+                                  style="height: auto; display: block"
+                                />
+                              </p>
+                              <!--Customer Name-->
+                              <p
+                                style="
+                                  font-size: 18px;
+                                  font-weight: bold;
+                                  margin: 0 0 20px 0;
+                                  color: #360b36;
+                                "
+                              >
+                                Hai, <span><%= data.fullname %></span>
+                              </p>
+                              <!--Paragraph 1-->
+                              <p
+                                style="
+                                  margin: 0 0 12px 0;
+                                  font-size: 14px;
+                                  line-height: 18px;
+                                "
+                              >
+                                Segera lakukan pelunasan pembayaran untuk
+                                melanjutkan Pemesanan Inspeksi Kendaraan Anda.
+                              </p>
+                              <!--Table Order Summary-->
+                              <table
+                                style="
+                                  width: 100%;
+                                  border-collapse: collapse;
+                                  border: 0;
+                                  border-spacing: 0;
+                                  margin: 0;
+                                  font-size: 12px;
+                                  color: #360b36;
+                                  background: #f5edf5;
+                                "
+                              >
+                                <tr>
+                                  <td style="padding: 10px 15px; width: 30%">
+                                    Nomor Invoice
+                                  </td>
+                                  <td>:</td>
+                                  <td style="padding: 10px 15px">
+                                    <%= data.invoice %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 15px; width: 30%">
+                                    Total Pembayaran
+                                  </td>
+                                  <td>:</td>
+                                  <td style="padding: 10px 15px">
+                                    Rp <%= new Intl.NumberFormat('id-ID').format(data.payment_total) %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 15px; width: 30%">
+                                    Metode Pembayaran
+                                  </td>
+                                  <td>:</td>
+                                  <td style="padding: 10px 15px">
+                                    <%= data.bank_code %> Virtual Account
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 15px; width: 30%">
+                                    No. Virtual Account
+                                  </td>
+                                  <td>:</td>
+                                  <td style="padding: 10px 15px">
+                                    <%= data.va_number %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 15px; width: 30%">
+                                    Batas Waktu Pembayaran*
+                                  </td>
+                                  <td>:</td>
+                                  <td style="padding: 10px 15px">
+                                    <%= new
+                                    Date(data.payment_expired_date).toLocaleString('id-ID',
+                                    { weekday: 'long', year: 'numeric', month:
+                                    'long', day: 'numeric', hour: '2-digit',
+                                    minute: '2-digit' }) %> WIB
+                                  </td>
+                                </tr>
+                              </table>
+                              <!--Paragraph 2-->
+                              <p
+                                style="
+                                  font-size: 10px;
+                                  color: #ff2e2e;
+                                  font-style: italic;
+                                  float: left;
+                                  line-height: 21px;
+                                "
+                              >
+                                *Apabila pembayaran dilakukan melebihi waktu
+                                tersebut, maka transaksi otomatis dibatalkan.
+                              </p>
+
+                              <!-- here untuk if berdasarkan bank_code -->
+                              <div
+                                style="
+                                  font-size: 14px;
+                                  line-height: 20px;
+                                  text-align: center;
+                                  color: #9e9e9e;
+                                  padding: 16px 24px;
+                                  background: #ffffff;
+                                "
+                              >
+                                <table
+                                  width="100%"
+                                  border="0"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  bgcolor="#ffffff"
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td height="10px" align="left"></td>
+                                    </tr>
+                                    <tr>
+                                      <td
+                                        align="center"
+                                        valign="top"
+                                        style="text-align: center"
+                                      >
+                                        <span
+                                          style="
+                                            text-align: center;
+                                            font-size: 18px;
+                                            font-weight: bolder;
+                                            line-height: 28px;
+                                            color: #000;
+                                            text-align: right;
+                                          "
+                                          >Silahkan Lakukan Pembayaran Dengan
+                                          Transfer</span
+                                        >
+                                        <br />
+                                        <span
+                                          style="
+                                            text-align: center;
+                                            font-size: 18px;
+                                            font-weight: bolder;
+                                            line-height: 28px;
+                                            color: #000;
+                                            text-align: right;
+                                          "
+                                          >Ke Nomor Rekening Virtual
+                                          Account</span
+                                        >
+                                      </td>
+                                    </tr>
+                                    <tr width="100%" style="width: 100%">
+                                      <td
+                                        style="text-align: center"
+                                        align="center"
+                                      >
+                                        <table
+                                          width="100%"
+                                          border="0"
+                                          cellpadding="0"
+                                          cellspacing="0"
+                                        >
+                                          <tbody>
+                                            <tr>
+                                              <td align="center">
+                                                <% var urlImage = process.env.APP_URL + '/public/banks/' + data.bank_code + '.png'; %>
+                                                <img
+                                                  valign="middle"
+                                                  src="<%= urlImage %>"
+                                                  height="40"
+                                                  alt=""
+                                                  style="border: 0"
+                                                  tabindex="0"
+                                                />
+                                                <span
+                                                  style="
+                                                    vertical-align: middle;
+                                                    font-size: 24px;
+                                                    font-weight: bolder;
+                                                    line-height: 28px;
+                                                    color: #000;
+                                                    padding-left: 10px;
+                                                  "
+                                                  ><%= data.va_number %></span
+                                                >
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td height="10px" align="left"></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <%- include('components/' + data.bank_code + '.ejs', { va_number: data.va_number }) %>
+                              <!--Paragraph 2-->
+                              <p
+                                style="
+                                  margin: 0 0 12px 0;
+                                  font-size: 14px;
+                                  line-height: 18px;
+                                "
+                              >
+                                Apabila Anda butuh bantuan jangan ragu untuk
+                                menghubungi Customer Care kami melalui
+                                <a
+                                  href="mailto:info@acv.astra.co.id"
+                                  target="_blank"
+                                  style="
+                                    color: #8f3f97;
+                                    text-decoration: underline;
+                                  "
+                                  >Email Resmi</a
+                                >
+                                atau kunjungi halaman
+                                <a
+                                  href="<%= data.url_contact_us %>"
+                                  style="
+                                    color: #8f3f97;
+                                    text-decoration: underline;
+                                  "
+                                  >Hubungi Kami</a
+                                >.
+                              </p>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!--Footer-->
+            <%- include('components/footer.ejs') %>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
