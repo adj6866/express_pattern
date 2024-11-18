@@ -1,19 +1,25 @@
 import { Container } from 'inversify';
-import { DataSource } from "typeorm"
+import { DataSource } from 'typeorm';
 import { dataSource } from '@/utils';
 import { TYPES } from '@/shared/constants/type.constant';
 
-// inject controllers
-import '@/features/welcome.controller';
-import '@/features/v4/customer-inquiries/customer-inquiry.controller';
-
 // inject entities
-import { CustomerInquiry } from '@/database/entities/customer-inquiry.entity';
+import { User } from '@/database/entities';
 
-export const container = new Container({ autoBindInjectable: true });
+// inject controllers
+import '@/features';
+
+const container = new Container({ autoBindInjectable: true });
 
 // https://typeorm.io/working-with-repository
 container.bind<DataSource>(TYPES.DataSource).toConstantValue(dataSource);
-container.bind(TYPES.RepositoryCustomerInquiry).toDynamicValue(() => {
-  return dataSource.getRepository(CustomerInquiry);
+
+// bind repositories
+const repositories = [{ type: TYPES.RepositoryUser, entity: User }];
+repositories.forEach(({ type, entity }) => {
+  container.bind(type).toDynamicValue(() => {
+    return dataSource.getRepository(entity);
+  });
 });
+
+export { container };

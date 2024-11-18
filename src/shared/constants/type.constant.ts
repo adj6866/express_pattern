@@ -1,4 +1,4 @@
 export const TYPES = {
   DataSource: Symbol.for('DataSource'),
-  RepositoryCustomerInquiry: Symbol.for('Repository<CustomerInquiry>'),
-}
+  RepositoryUser: Symbol.for('RepositoryUser'),
+};

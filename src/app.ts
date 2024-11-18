@@ -1,18 +1,18 @@
 import 'dotenv/config';
-import { container, dataSource, swaggerBuild } from '@/utils';
 import cors from 'cors';
 import 'reflect-metadata';
+import morgan from 'morgan';
 import helmet from 'helmet';
 import retry from 'async-retry';
 import moment from 'moment-timezone';
 import compression from 'compression';
 import * as bodyParser from 'body-parser';
+import { container, dataSource } from '@/utils';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { HandlerException } from '@/shared/exceptions/handler.exception';
 import { ResponseJson } from '@/shared/middlewares/response-json.middleware';
-import { listenSubscribes } from './events/subscribers';
-import path from 'path';
-import express from 'express';
+import { VerifyJWT } from '@/shared/middlewares/verify-jwt.middleware';
+// import { listenSubscribes } from './events/subscribers';
 
 moment.tz.setDefault('Asia/Jakarta');
 
@@ -28,9 +28,11 @@ async function Bootstrap() {
     app.use(bodyParser.json());
     app.use(helmet());
     app.use(cors());
+    app.use(VerifyJWT);
     app.use(ResponseJson);
-    app.use('/public/banks', express.static(path.join(__dirname, '../public/banks')));
-    swaggerBuild(app);
+    app.use(morgan('dev'));
+
+    // swaggerBuild(app);
   });
 
   server.setErrorConfig((app) => {
@@ -40,7 +42,7 @@ async function Bootstrap() {
   const serverInstance = server.build();
 
   // run service bus
-  listenSubscribes();
+  // listenSubscribes();
 
   await retry(
     async (bail) => {

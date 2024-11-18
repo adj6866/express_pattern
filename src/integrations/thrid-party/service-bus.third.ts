@@ -7,6 +7,7 @@ import {
   ServiceBusReceivedMessage,
   ServiceBusMessage,
 } from '@azure/service-bus';
+import moment from 'moment';
 
 export class ServiceBusThird implements PubSubInterface {
   private static sbClient: ServiceBusClient;
@@ -29,8 +30,14 @@ export class ServiceBusThird implements PubSubInterface {
   async publish(topicName: string, body: any) {
     const sbClient = ServiceBusThird.getClient();
     const sender = sbClient.createSender(topicName);
+
+    const adjustBody = {
+      ...body,
+      publishedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+    };
+
     const message: ServiceBusMessage = {
-      body: body,
+      body: adjustBody,
       contentType: 'application/json',
       applicationProperties: {
         topic_name: topicName,
@@ -109,16 +116,30 @@ export class ServiceBusThird implements PubSubInterface {
           console.log('DLQ START');
 
           // Processing logic goes here
-          const sendToQueue = sbClient.createSender(topicName);
-          await sendToQueue.sendMessages({
-            body: message.body,
-            applicationProperties: {
-              subscription_name: subscriptionName,
-            },
-          });
+          const publishedAt = message.body?.publishedAt
+            ? message.body.publishedAt
+            : null;
 
-          await receiver.completeMessage(message);
-          console.log('DLQ completed ' + topicName + ' ' + subscriptionName);
+          if (
+            publishedAt !== null &&
+            moment(publishedAt).add(20, 'minutes').isBefore(moment())
+          ) {
+            console.log(
+              'message expired ' + topicName + ' ' + subscriptionName
+            );
+            await receiver.completeMessage(message);
+          } else {
+            const sendToQueue = sbClient.createSender(topicName);
+            await sendToQueue.sendMessages({
+              body: message.body,
+              applicationProperties: {
+                subscription_name: subscriptionName,
+              },
+            });
+
+            console.log('DLQ completed ' + topicName + ' ' + subscriptionName);
+            await receiver.completeMessage(message);
+          }
         } else {
           console.log('no message dlq');
         }
@@ -128,7 +149,7 @@ export class ServiceBusThird implements PubSubInterface {
         console.log('error dlq to main queue');
       }
 
-      await delay(20000); // 20 seconds
+      await delay(20000);
     }
   }
 }

@@ -101,7 +101,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src",
+    "src", "app.ts", "tsconfig.json", "jest.config.js", "eslint.config.js", "babel.config.js",
   ],
   "exclude": [
     "node_modules", 
