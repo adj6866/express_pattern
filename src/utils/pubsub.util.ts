@@ -1,4 +1,4 @@
-import { ServiceBusThird } from '@/integrations/thrid-party/service-bus.third';
+import { ServiceBusThird } from "@/integrations/thrid-party/service-bus.third";
 
 class PubSub {
   private static instance: any;
